@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:expanse_tracker/models/expense.dart';
 
 final formatter = DateFormat.yMd();
 
@@ -18,20 +18,50 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleControler = TextEditingController();
   final _amountControler = TextEditingController();
   DateTime? _selectedDate;
+  Categories _selectedCategory = Categories.food;
 
-void _presentDatePicker() async {
-  final now = DateTime.now();
-  final firstDate = DateTime(now.year - 1, now.month, now.day);
+  void _presentDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
 
-   final pickedDate = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: now,
       firstDate: firstDate,
       lastDate: now,
     );
     setState(() {
-      _selectedDate = pickedDate;   // in this way we can update the date in the textfield, using a variable, and then update the textfield with the new value
+      _selectedDate =
+          pickedDate; // in this way we can update the date in the textfield, using a variable, and then update the textfield with the new value
     });
+  }
+
+  void _submitExpenseData() {
+    final enteredAmount =
+        double.tryParse(_amountControler.text); //tryParse(1.22)=> 1.22
+
+    final amountIsInvalid = enteredAmount == null ||
+        enteredAmount <=
+            0; // if the value is null or less than or equal to 0, the value is invalid
+    if (_titleControler.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text('Please enter a valid title, amount and date'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+                child: const Text('Ok'))
+          ],
+        ),
+      );
+      return;
+    }
   }
 
 // this method is used to clear the input TextField of _titleController, provided by Flutter
@@ -74,7 +104,9 @@ void _presentDatePicker() async {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                   Text(_selectedDate == null ? "No date selected" : formatter.format(_selectedDate!)),
+                  Text(_selectedDate == null
+                      ? "No date selected"
+                      : formatter.format(_selectedDate!)),
                   IconButton(
                     onPressed: _presentDatePicker,
                     icon: const Icon(
@@ -86,8 +118,29 @@ void _presentDatePicker() async {
             )
           ],
         ),
+        const SizedBox(height: 16),
         Row(
           children: [
+            DropdownButton(
+              value: _selectedCategory,
+              items: Categories.values
+                  .map(
+                    (category) => DropdownMenuItem(
+                      value: category,
+                      child: Text(
+                        category.name.toUpperCase(),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
+            ),
+            const Spacer(),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -95,10 +148,7 @@ void _presentDatePicker() async {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                print(_titleControler.text);
-                print(_amountControler.text);
-              },
+              onPressed: _submitExpenseData,
               child: const Text('Save Expense'),
             )
           ],

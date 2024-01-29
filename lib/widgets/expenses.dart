@@ -19,25 +19,25 @@ class _ExpensesState extends State<Expenses> {
       title: 'Groceries',
       amount: 19.99,
       date: DateTime.now(),
-      category: Category.food,
+      category: Categories.food,
     ),
     Expense(
       title: 'New shoes',
       amount: 100.00,
       date: DateTime.now(),
-      category: Category.leisure,
+      category: Categories.leisure,
     ),
     Expense(
       title: 'Fly ticket',
       amount: 120.99,
       date: DateTime.now(),
-      category: Category.travel,
+      category: Categories.travel,
     ),
     Expense(
       title: 'New laptop',
       amount: 1000.75,
       date: DateTime.now(),
-      category: Category.work,
+      category: Categories.work,
     ),
   ];
 
