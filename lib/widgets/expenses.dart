@@ -41,14 +41,21 @@ class _ExpensesState extends State<Expenses> {
     ),
   ];
 
+
+
 //the function used internally appbar, to open an "add sheet"
 void _openAddExpenseOverlay() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) =>  NewExpense(addOnExpense: _addExpense),
     );
   }
 
+void _addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

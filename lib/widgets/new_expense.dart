@@ -5,7 +5,9 @@ import 'package:expanse_tracker/models/expense.dart';
 final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.addOnExpense});
+
+  final void Function(Expense) addOnExpense;
 
   @override
   State<NewExpense> createState() {
@@ -62,6 +64,13 @@ class _NewExpenseState extends State<NewExpense> {
       );
       return;
     }
+    widget.addOnExpense(
+      Expense(
+          title: _titleControler.text,
+          amount: enteredAmount,
+          date: _selectedDate!,
+          category: _selectedCategory),
+    );
   }
 
 // this method is used to clear the input TextField of _titleController, provided by Flutter
