@@ -23,6 +23,13 @@ void main() {
             vertical: 6,
           ),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kDarkColorScheme.primaryContainer,
+            foregroundColor: kDarkColorScheme.onPrimaryContainer,
+            elevation: 10,
+          ),
+        ),
       ),
       theme: ThemeData().copyWith(
         colorScheme: kColorScheme,
